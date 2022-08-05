@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  web:
+    build: ./myamazon_flask
+    command: python wsgi.py
+    volumes:
+      - ./myamazon_flask/:/usr/src/app/
+    ports:
+      - 5000:5000
+    environment:
+      - DB_NAME=myamazon_db
+      - DB_USER=postgres
+      - DB_PASSWORD=admin123
+      - DB_HOST=pg
+      - DB_PORT=5432
+      - DATABASE=postgres
+    depends_on:
+      - pg
+  pg:
+    container_name: pg_container1
+    image: postgres:13.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGUSER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - "${PWD}/myamazon_db_init/:/docker-entrypoint-initdb.d/"
+  pgadmin:
+    container_name: pgadmin_container1
+    image: dpage/pgadmin4:5.2
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_LISTEN_PORT: 5433
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - "5433:5433"
+    depends_on:
+      - pg
