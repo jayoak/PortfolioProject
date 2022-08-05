@@ -34,5 +34,5 @@ jobs:
           echo test, and deploy your project.
       
       # Run all tests with verbose flag
-      - name: Run all tests
-        run: pytest -v
+      #- name: Run all tests
+      #  run: pytest -v
